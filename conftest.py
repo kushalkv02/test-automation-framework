@@ -1,11 +1,13 @@
 import pytest
 import allure
 from playwright.sync_api import sync_playwright
+import os
 
 @pytest.fixture
 def page():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
+        headless = True if os.getenv("CI") else False
+        browser = p.chromium.launch(headless=headless)
         page = browser.new_page()
         yield page
         browser.close()
